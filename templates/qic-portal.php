@@ -57,7 +57,7 @@ if ( ! $qic_countries ) {
 			<!-- STEP 1: PACKAGE -->
 			<section class="qic-panel" data-panel="1">
 				<div class="qic-portal-label"><?php esc_html_e( 'Select Verified Service Category', 'quick-instant-checkout' ); ?></div>
-				<div class="qic-cat-grid">
+				<div class="qic-cat-grid<?php echo count( $qic_catalog ) === 1 ? ' is-single' : ''; ?>">
 					<?php foreach ( $qic_catalog as $cat ) : ?>
 						<button type="button" class="qic-cat" data-cat="<?php echo esc_attr( $cat['id'] ); ?>">
 							<span class="qic-cat-info">

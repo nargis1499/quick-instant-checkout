@@ -272,6 +272,14 @@ class QIC_Admin {
 			.qic-set-wrap :focus,.qic-set-wrap :focus-visible{outline:none;}
 			.qic-set-wrap input:focus,.qic-set-wrap select:focus,.qic-set-wrap textarea:focus{box-shadow:none;border-color:#8c8f94;}
 			.qic-set-proto-wrap{margin:14px 0 6px;}
+			.qic-toggle{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none;}
+			.qic-toggle input{position:absolute;opacity:0;width:0;height:0;}
+			.qic-toggle-slider{position:relative;display:inline-block;width:42px;height:24px;background:#cbd5e1;border-radius:999px;transition:.2s;}
+			.qic-toggle-slider:before{content:"";position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+			.qic-toggle input:checked + .qic-toggle-slider{background:#16a34a;}
+			.qic-toggle input:checked + .qic-toggle-slider:before{transform:translateX(18px);}
+			.qic-toggle input:focus + .qic-toggle-slider{box-shadow:0 0 0 2px rgba(22,163,74,.3);}
+			.qic-toggle-label{font-weight:600;color:#1e293b;}
 		</style>
 		<div class="qic-set-wrap">
 			<div class="qic-set-hero">
@@ -350,6 +358,17 @@ class QIC_Admin {
 						<tr>
 							<th scope="row"><label for="qic_portal_subtitle"><?php esc_html_e( 'Portal header subtitle', 'quick-instant-checkout' ); ?></label></th>
 							<td><input type="text" class="large-text" id="qic_portal_subtitle" name="qic_portal_subtitle" value="<?php echo esc_attr( $s['portal_subtitle'] ); ?>" /></td>
+						</tr>
+						<tr>
+							<th scope="row"><?php esc_html_e( 'Show relevant category products', 'quick-instant-checkout' ); ?></th>
+							<td>
+								<label class="qic-toggle">
+									<input type="checkbox" name="qic_show_category_products" value="1" <?php checked( 'yes', $s['show_category_products'] ); ?> />
+									<span class="qic-toggle-slider"></span>
+									<span class="qic-toggle-label"><?php esc_html_e( 'Show relevant category products in order portal', 'quick-instant-checkout' ); ?></span>
+								</label>
+								<p class="description"><?php esc_html_e( 'When enabled, the order portal displays other products from the same category. When disabled, it will only show the selected product.', 'quick-instant-checkout' ); ?></p>
+							</td>
 						</tr>
 						<tr>
 							<th scope="row"><label for="qic_terms_text"><?php esc_html_e( 'Terms checkbox text (Verify step)', 'quick-instant-checkout' ); ?></label></th>
@@ -494,6 +513,7 @@ class QIC_Admin {
 			'accent_color'    => $accent ? $accent : '#4285f4',
 			'theme_preset'    => sanitize_key( wp_unslash( $_POST['qic_theme_preset'] ?? 'red' ) ),
 			'load_fonts'      => isset( $_POST['qic_load_fonts'] ) ? 'yes' : 'no',
+			'show_category_products' => isset( $_POST['qic_show_category_products'] ) ? 'yes' : 'no',
 			'portal_subtitle' => sanitize_text_field( wp_unslash( $_POST['qic_portal_subtitle'] ?? '' ) ),
 			'crypto_ids'      => sanitize_text_field( wp_unslash( $_POST['qic_crypto_ids'] ?? '' ) ),
 			'terms_text'      => sanitize_text_field( wp_unslash( $_POST['qic_terms_text'] ?? '' ) ),
