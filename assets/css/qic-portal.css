@@ -2,21 +2,30 @@
  * Order Portal modal (multistep checkout) styles.
  */
 
-/* ============ Hello Elementor & Theme Reset Isolation ============ */
+/* ============ Universal Theme & Plugin Isolation Shield ============ */
+#qic-portal,
 .qic-portal,
+#qic-portal *,
 .qic-portal *,
+#qic-portal *::before,
 .qic-portal *::before,
+#qic-portal *::after,
 .qic-portal *::after {
 	box-sizing: border-box !important;
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
 }
 
-/* Fix z-index above Elementor sticky headers, popups, and admin bars */
+/* Fix z-index above all theme headers, popups, and admin bars (max 32-bit integer) */
+#qic-portal[hidden],
 .qic-portal[hidden] { display: none !important; }
+#qic-portal,
 .qic-portal,
+body #qic-portal,
 body .qic-portal {
 	position: fixed !important;
 	inset: 0 !important;
-	z-index: 9999999 !important;
+	z-index: 2147483647 !important;
 	display: flex !important;
 	align-items: center !important;
 	justify-content: center !important;
@@ -25,18 +34,25 @@ body .qic-portal {
 	border: 0 !important;
 	font-family: inherit;
 }
+#qic-portal .qic-portal-overlay,
 .qic-portal-overlay,
+body #qic-portal .qic-portal-overlay,
 body .qic-portal .qic-portal-overlay {
 	position: fixed !important;
 	inset: 0 !important;
+	width: 100vw !important;
+	height: 100vh !important;
 	background: rgba(15, 23, 42, 0.6) !important;
 	backdrop-filter: blur(2px) !important;
+	-webkit-backdrop-filter: blur(2px) !important;
 	z-index: 1 !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	border: 0 !important;
 }
+#qic-portal .qic-portal-modal,
 .qic-portal-modal,
+body #qic-portal .qic-portal-modal,
 body .qic-portal .qic-portal-modal {
 	position: relative !important;
 	z-index: 2 !important;
@@ -52,10 +68,13 @@ body .qic-portal .qic-portal-modal {
 	border: 0 !important;
 }
 
-/* Neutralize theme/Elementor button resets for any button inside portal */
+/* Neutralize any theme/plugin button resets for any button inside portal */
+#qic-portal button,
 .qic-portal button,
+body #qic-portal button,
 body .qic-portal button,
 .elementor .qic-portal button,
+.woocommerce .qic-portal button,
 .elementor-kit-X .qic-portal button {
 	all: unset;
 	box-sizing: border-box !important;
@@ -79,34 +98,56 @@ body .qic-portal button,
 	appearance: none;
 }
 
-/* Neutralize theme/Elementor SVG distortion */
+/* Neutralize theme/plugin SVG scaling & corruption */
+#qic-portal svg,
 .qic-portal svg,
+body #qic-portal svg,
 body .qic-portal svg,
 .elementor .qic-portal svg {
 	max-width: none !important;
+	max-height: none !important;
 	height: auto;
-	vertical-align: middle;
-	flex-shrink: 0;
+	vertical-align: middle !important;
+	flex-shrink: 0 !important;
 }
-.qic-portal svg[width="14"] { width: 14px !important; height: 14px !important; }
-.qic-portal svg[width="16"] { width: 16px !important; height: 16px !important; }
-.qic-portal svg[width="18"] { width: 18px !important; height: 18px !important; }
-.qic-portal svg[width="20"] { width: 20px !important; height: 20px !important; }
-.qic-portal svg[width="24"] { width: 24px !important; height: 24px !important; }
-.qic-portal svg[width="28"] { width: 28px !important; height: 28px !important; }
-.qic-portal svg[width="36"] { width: 36px !important; height: 36px !important; }
+#qic-portal svg[width="11"], .qic-portal svg[width="11"] { width: 11px !important; height: 13px !important; }
+#qic-portal svg[width="12"], .qic-portal svg[width="12"] { width: 12px !important; height: 14px !important; }
+#qic-portal svg[width="14"], .qic-portal svg[width="14"] { width: 14px !important; height: 14px !important; }
+#qic-portal svg[width="15"], .qic-portal svg[width="15"] { width: 15px !important; height: 15px !important; }
+#qic-portal svg[width="16"], .qic-portal svg[width="16"] { width: 16px !important; height: 16px !important; }
+#qic-portal svg[width="17"], .qic-portal svg[width="17"] { width: 17px !important; height: 19px !important; }
+#qic-portal svg[width="18"], .qic-portal svg[width="18"] { width: 18px !important; height: 18px !important; }
+#qic-portal svg[width="20"], .qic-portal svg[width="20"] { width: 20px !important; height: 20px !important; }
+#qic-portal svg[width="24"], .qic-portal svg[width="24"] { width: 24px !important; height: 24px !important; }
+#qic-portal svg[width="28"], .qic-portal svg[width="28"] { width: 28px !important; height: 28px !important; }
+#qic-portal svg[width="36"], .qic-portal svg[width="36"] { width: 36px !important; height: 36px !important; }
+
+/* Prevent themes from filling stroke SVGs with solid black */
+#qic-portal svg[fill="none"],
+#qic-portal svg[fill="none"] *,
+.qic-portal svg[fill="none"],
+.qic-portal svg[fill="none"] * {
+	fill: none !important;
+}
+#qic-portal svg[stroke="currentColor"],
+#qic-portal svg[stroke="currentColor"] *,
+.qic-portal svg[stroke="currentColor"],
+.qic-portal svg[stroke="currentColor"] * {
+	stroke: currentColor !important;
+}
+#qic-portal svg[fill="currentColor"],
+#qic-portal svg[fill="currentColor"] *,
+.qic-portal svg[fill="currentColor"],
+.qic-portal svg[fill="currentColor"] * {
+	fill: currentColor !important;
+}
 
 /* Neutralize theme headings and paragraphs inside portal */
-.qic-portal h1,
-.qic-portal h2,
-.qic-portal h3,
-.qic-portal h4,
-.qic-portal h5,
-.qic-portal h6,
-.qic-portal p {
-	margin: 0;
-	padding: 0;
-	line-height: inherit;
+#qic-portal h1, #qic-portal h2, #qic-portal h3, #qic-portal h4, #qic-portal h5, #qic-portal h6, #qic-portal p,
+.qic-portal h1, .qic-portal h2, .qic-portal h3, .qic-portal h4, .qic-portal h5, .qic-portal h6, .qic-portal p {
+	margin: 0 !important;
+	padding: 0 !important;
+	line-height: inherit !important;
 }
 
 /* Header */

@@ -26,6 +26,7 @@ $qic_code     = get_woocommerce_currency();
 $qic_total_tx = sprintf( '%s%s %s', $qic_symbol, number_format_i18n( $default['price'], 2 ), $qic_code );
 ?>
 <div class="qic-widget"
+	id="qic-widget-<?php echo esc_attr( $product->get_id() ); ?>"
 	data-product-id="<?php echo esc_attr( $product->get_id() ); ?>"
 	data-product-name="<?php echo esc_attr( $product->get_name() ); ?>"
 	style="--qic-accent:<?php echo esc_attr( qic_accent_color() ); ?>;">

@@ -26,7 +26,7 @@ if ( ! $qic_countries ) {
 	);
 }
 ?>
-<div class="qic-portal" data-qic-portal style="--qic-accent:<?php echo esc_attr( qic_accent_color() ); ?>;" hidden>
+<div id="qic-portal" class="qic-portal" data-qic-portal style="--qic-accent:<?php echo esc_attr( qic_accent_color() ); ?>;" hidden>
 	<div class="qic-portal-overlay" data-qic-close></div>
 	<div class="qic-portal-modal" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Order portal', 'quick-instant-checkout' ); ?>">
 
