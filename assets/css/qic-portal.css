@@ -136,6 +136,9 @@
 	gap: 14px;
 	margin-bottom: 26px;
 }
+.qic-cat-grid.is-single {
+	grid-template-columns: 1fr;
+}
 .qic-cat {
 	display: flex;
 	align-items: center;

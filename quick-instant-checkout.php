@@ -70,17 +70,18 @@ function qic_boot() {
  */
 function qic_settings() {
 	$defaults = array(
-		'dispatch_label'  => __( 'Instant (< 3 minutes)', 'quick-instant-checkout' ),
-		'warranty_label'  => __( '72 Hours Guaranteed', 'quick-instant-checkout' ),
-		'button_template' => __( 'Proceed to Payment ({price})', 'quick-instant-checkout' ),
-		'note_text'       => __( 'Instant delivery via CSV spreadsheet upon payment confirmation.', 'quick-instant-checkout' ),
-		'accent_color'    => '#e8243f',
-		'theme_preset'    => 'red',
-		'load_fonts'      => 'yes',
-		'portal_subtitle' => __( 'Automated verification & instant recovery file delivery', 'quick-instant-checkout' ),
-		'crypto_ids'      => 'nowpayments, coinbase, btcpay, binance, cryptomus, confirmo',
-		'terms_text'      => __( 'I agree to the terms of service and the replacement policy.', 'quick-instant-checkout' ),
-		'crypto_order_status' => 'on-hold',
+		'dispatch_label'         => __( 'Instant (< 3 minutes)', 'quick-instant-checkout' ),
+		'warranty_label'         => __( '72 Hours Guaranteed', 'quick-instant-checkout' ),
+		'button_template'        => __( 'Proceed to Payment ({price})', 'quick-instant-checkout' ),
+		'note_text'              => __( 'Instant delivery via CSV spreadsheet upon payment confirmation.', 'quick-instant-checkout' ),
+		'accent_color'           => '#e8243f',
+		'theme_preset'           => 'red',
+		'load_fonts'             => 'yes',
+		'show_category_products' => 'yes',
+		'portal_subtitle'        => __( 'Automated verification & instant recovery file delivery', 'quick-instant-checkout' ),
+		'crypto_ids'             => 'nowpayments, coinbase, btcpay, binance, cryptomus, confirmo',
+		'terms_text'             => __( 'I agree to the terms of service and the replacement policy.', 'quick-instant-checkout' ),
+		'crypto_order_status'    => 'on-hold',
 	);
 	return wp_parse_args( get_option( 'qic_settings', array() ), $defaults );
 }

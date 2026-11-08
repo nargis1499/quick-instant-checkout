@@ -45,15 +45,41 @@ class QIC_Portal {
 	/**
 	 * All QIC-enabled products with their tiers, for the category grid.
 	 *
-	 * When a context product is given, only products sharing at least one
-	 * WooCommerce product category with it are listed (the context product
-	 * itself is always included). Products without categories fall back to
-	 * the full list.
+	 * When a context product is given and relevant category products are enabled,
+	 * products sharing at least one WooCommerce product category with it
+	 * are listed (the context product itself is always included).
+	 * When category products are disabled, only the context product is listed.
 	 *
 	 * @param int $context_id Product the portal was opened from.
 	 * @return array[]
 	 */
 	public static function catalog( $context_id = 0 ) {
+		$context_id             = (int) $context_id;
+		$settings               = qic_settings();
+		$show_category_products = ! empty( $settings['show_category_products'] ) && 'yes' === $settings['show_category_products'];
+
+		if ( $context_id && ! $show_category_products ) {
+			$product = wc_get_product( $context_id );
+			if ( ! $product || ! QIC_Tiers::is_enabled( $product ) || ! ( $product->is_type( 'variable' ) || $product->is_type( 'simple' ) ) ) {
+				return array();
+			}
+			$tiers = QIC_Tiers::get_tiers( $product );
+			if ( ! $tiers ) {
+				return array();
+			}
+			$prices = array_column( $tiers, 'price' );
+			return array(
+				array(
+					'id'      => (int) $product->get_id(),
+					'name'    => $product->get_name(),
+					'emoji'   => (string) $product->get_meta( '_qic_emoji' ),
+					'tagline' => (string) $product->get_meta( '_qic_tagline' ),
+					'from'    => $prices ? min( $prices ) : 0,
+					'tiers'   => $tiers,
+				),
+			);
+		}
+
 		$ids = get_posts(
 			array(
 				'post_type'   => 'product',
@@ -69,7 +95,6 @@ class QIC_Portal {
 			)
 		);
 
-		$context_id = (int) $context_id;
 		if ( $context_id ) {
 			$context_cats = wc_get_product_term_ids( $context_id, 'product_cat' );
 			if ( $context_cats ) {
