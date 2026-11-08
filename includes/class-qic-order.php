@@ -285,15 +285,25 @@ class QIC_Order {
 	 */
 	public function copy_tier_meta( $item, $cart_item_key, $values, $order ) {
 		$product = isset( $values['data'] ) ? $values['data'] : null;
-		if ( ! $product instanceof WC_Product_Variation ) {
+		if ( ! $product instanceof WC_Product ) {
 			return;
 		}
-		$parent = wc_get_product( $product->get_parent_id() );
+		if ( $product instanceof WC_Product_Variation ) {
+			$parent = wc_get_product( $product->get_parent_id() );
+		} elseif ( $product->is_type( 'simple' ) ) {
+			$parent = $product;
+		} else {
+			return;
+		}
+
 		if ( ! $parent || 'yes' !== $parent->get_meta( '_qic_enabled' ) ) {
 			return;
 		}
 
 		$accounts = (int) $product->get_meta( '_qic_accounts' );
+		if ( $accounts <= 0 && $product->is_type( 'simple' ) ) {
+			$accounts = 1;
+		}
 		if ( $accounts > 0 ) {
 			$item->add_meta_data( __( 'Accounts in package', 'quick-instant-checkout' ), $accounts );
 		}

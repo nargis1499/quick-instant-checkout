@@ -1,6 +1,6 @@
 <?php
 /**
- * Tier reader service: normalizes variable-product variations into package tiers.
+ * Tier reader service: normalizes variable-product variations and simple products into package tiers.
  *
  * @package quick-instant-checkout
  */
@@ -34,15 +34,61 @@ class QIC_Tiers {
 	}
 
 	/**
-	 * Build the tier list from the product's variations.
+	 * Build the tier list from the product's variations (or single tier for simple products).
 	 *
 	 * @param mixed $product Product object or ID.
 	 * @return array[] Tiers: id, label, accounts, price, per_account, badge, in_stock, attributes, is_default.
 	 */
 	public static function get_tiers( $product ) {
 		$product = self::product( $product );
-		if ( ! $product || ! $product->is_type( 'variable' ) ) {
+		if ( ! $product || ! ( $product->is_type( 'variable' ) || $product->is_type( 'simple' ) ) ) {
 			return array();
+		}
+
+		if ( $product->is_type( 'simple' ) ) {
+			$price         = (float) wc_get_price_to_display( $product );
+			$regular_price = $product->get_regular_price();
+			$regular       = ( '' !== $regular_price ) ? (float) wc_get_price_to_display( $product, array( 'price' => $regular_price ) ) : $price;
+			$save          = max( 0, round( $regular - $price, 2 ) );
+
+			$label = (string) $product->get_meta( '_qic_label' );
+			if ( '' === $label ) {
+				$label = $product->get_name();
+			}
+			$clean_label = trim( (string) preg_replace( '/^[\w\s-]+:\s*/', '', $label ) );
+			if ( '' === $clean_label ) {
+				$clean_label = $label;
+			}
+
+			$accounts = (int) $product->get_meta( '_qic_accounts' );
+			if ( $accounts <= 0 && preg_match( '/(\d+)/', $clean_label, $matches ) ) {
+				$accounts = (int) $matches[1];
+			}
+			if ( $accounts <= 0 ) {
+				$accounts = 1;
+			}
+
+			$title_base = $accounts > 0
+				? sprintf( _n( '%d Account', '%d Accounts', $accounts, 'quick-instant-checkout' ), $accounts )
+				: $clean_label;
+
+			return array(
+				array(
+					'id'          => (int) $product->get_id(),
+					'label'       => $clean_label,
+					'title'       => sprintf( __( '%s Package', 'quick-instant-checkout' ), $title_base ),
+					'accounts'    => $accounts,
+					'price'       => $price,
+					'regular'     => $regular,
+					'save'        => $save,
+					'per_account' => $accounts > 0 ? round( $price / $accounts, 2 ) : $price,
+					'badge'       => (string) $product->get_meta( '_qic_badge' ),
+					'ribbon'      => (string) $product->get_meta( '_qic_ribbon' ),
+					'in_stock'    => (bool) $product->is_in_stock() && (bool) $product->is_purchasable(),
+					'attributes'  => array(),
+					'is_default'  => true,
+				),
+			);
 		}
 
 		$tiers         = array();
