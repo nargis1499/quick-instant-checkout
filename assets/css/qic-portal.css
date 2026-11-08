@@ -921,3 +921,14 @@ body.qic-portal-open { overflow: hidden; }
 .qic-success .qic-btn-primary { animation: qicPanelIn 0.4s 0.32s ease both; }
 .qic-portal-close { transition: transform 0.15s, background 0.15s; }
 .qic-portal-close:hover { transform: rotate(90deg); }
+
+/* Universal trigger buttons */
+[qc_cart_product_id],
+[data-qc-cart-product-id],
+[data-qc_cart_product_id],
+[class*="qc_cart_product_id"],
+[class*="qc-cart-product-id"],
+[id*="qc_cart_product_id"],
+[id*="qc-cart-product-id"] {
+	cursor: pointer;
+}

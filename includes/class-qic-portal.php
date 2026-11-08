@@ -32,6 +32,7 @@ class QIC_Portal {
 	private function __construct() {
 		add_action( 'wc_ajax_qic_nonce', array( $this, 'ajax_nonce' ) );
 		add_action( 'wc_ajax_qic_place_order', array( $this, 'ajax_place_order' ) );
+		add_action( 'wc_ajax_qic_get_product', array( $this, 'ajax_get_product' ) );
 	}
 
 	public static function has_rendered() {
@@ -177,6 +178,106 @@ class QIC_Portal {
 	}
 
 	/**
+	 * AJAX endpoint to fetch portal category and tier data for a specific product.
+	 */
+	public function ajax_get_product() {
+		while ( ob_get_level() ) {
+			ob_end_clean();
+		}
+		wc_nocache_headers();
+
+		$product_id = isset( $_GET['product_id'] ) ? absint( wp_unslash( $_GET['product_id'] ) ) : 0;
+		if ( ! $product_id && isset( $_POST['product_id'] ) ) {
+			$product_id = absint( wp_unslash( $_POST['product_id'] ) );
+		}
+		if ( ! $product_id ) {
+			wp_send_json_error( array( 'message' => __( 'Missing product ID.', 'quick-instant-checkout' ) ) );
+		}
+
+		$product = wc_get_product( $product_id );
+		if ( ! $product || ! ( $product->is_type( 'variable' ) || $product->is_type( 'simple' ) ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid product.', 'quick-instant-checkout' ) ) );
+		}
+
+		$tiers = QIC_Tiers::get_tiers( $product );
+		if ( ! $tiers ) {
+			wp_send_json_error( array( 'message' => __( 'No purchasable tiers for this product.', 'quick-instant-checkout' ) ) );
+		}
+
+		$prices   = array_column( $tiers, 'price' );
+		$symbol   = get_woocommerce_currency_symbol();
+		$emoji    = (string) $product->get_meta( '_qic_emoji' );
+		$tagline  = (string) $product->get_meta( '_qic_tagline' );
+		$from     = $prices ? min( $prices ) : 0;
+		$cat_data = array(
+			'id'      => (int) $product->get_id(),
+			'name'    => $product->get_name(),
+			'emoji'   => $emoji,
+			'tagline' => $tagline,
+			'from'    => $from,
+			'tiers'   => $tiers,
+		);
+
+		ob_start();
+		?>
+		<button type="button" class="qic-cat" data-cat="<?php echo esc_attr( $cat_data['id'] ); ?>">
+			<span class="qic-cat-info">
+				<strong><?php echo esc_html( trim( $cat_data['emoji'] . ' ' . $cat_data['name'] ) ); ?></strong>
+				<?php if ( '' !== $cat_data['tagline'] ) : ?>
+					<small><?php echo esc_html( $cat_data['tagline'] ); ?></small>
+				<?php endif; ?>
+			</span>
+			<span class="qic-cat-from"><?php esc_html_e( 'From', 'quick-instant-checkout' ); ?> <?php echo esc_html( $symbol . number_format_i18n( $cat_data['from'], 2 ) ); ?></span>
+		</button>
+		<?php
+		$cat_html = ob_get_clean();
+
+		ob_start();
+		?>
+		<div class="qic-tier-tiles" data-cat="<?php echo esc_attr( $cat_data['id'] ); ?>" hidden>
+			<?php foreach ( $cat_data['tiers'] as $tier ) : ?>
+				<button type="button"
+					class="qic-tile<?php echo $tier['in_stock'] ? '' : ' is-disabled'; ?>"
+					data-cat="<?php echo esc_attr( $cat_data['id'] ); ?>"
+					data-tier="<?php echo esc_attr( $tier['id'] ); ?>"
+					data-accounts="<?php echo esc_attr( $tier['accounts'] ); ?>"
+					data-price="<?php echo esc_attr( $tier['price'] ); ?>"
+					data-per="<?php echo esc_attr( $tier['per_account'] ); ?>"
+					data-default="<?php echo $tier['is_default'] ? '1' : '0'; ?>"
+					<?php disabled( ! $tier['in_stock'] ); ?>>
+					<?php if ( '' !== $tier['ribbon'] ) : ?>
+						<span class="qic-ribbon"><?php echo esc_html( $tier['ribbon'] ); ?></span>
+					<?php endif; ?>
+					<strong><?php echo esc_html( $tier['accounts'] > 0 ? $tier['accounts'] . 'x' : $tier['label'] ); ?></strong>
+					<?php if ( $tier['save'] > 0 ) : ?>
+						<span class="qic-tile-save"><?php echo esc_html( sprintf( __( 'Save %s', 'quick-instant-checkout' ), $symbol . number_format_i18n( $tier['save'], 2 ) ) ); ?></span>
+					<?php endif; ?>
+					<span class="qic-tile-price"><?php echo esc_html( $symbol . number_format_i18n( $tier['price'], 2 ) ); ?></span>
+					<small>
+						<?php
+						if ( ! $tier['in_stock'] ) {
+							esc_html_e( 'Sold out', 'quick-instant-checkout' );
+						} else {
+							echo esc_html( $tier['badge'] );
+						}
+						?>
+					</small>
+				</button>
+			<?php endforeach; ?>
+		</div>
+		<?php
+		$tiers_html = ob_get_clean();
+
+		wp_send_json_success(
+			array(
+				'cat'        => $cat_data,
+				'cat_html'   => $cat_html,
+				'tiers_html' => $tiers_html,
+			)
+		);
+	}
+
+	/**
 	 * Session-safe nonce for order placement (fetched via ajax, cache-proof).
 	 */
 	public function ajax_nonce() {
@@ -257,7 +358,7 @@ class QIC_Portal {
 			$package_product = null;
 		}
 
-		if ( ! $parent || ! $package_product || ! QIC_Tiers::is_enabled( $parent ) || ! $package_product->is_purchasable() || ! $package_product->is_in_stock() ) {
+		if ( ! $parent || ! $package_product || ! $package_product->is_purchasable() || ! $package_product->is_in_stock() ) {
 			wp_send_json_error( array( 'message' => __( 'The selected package is unavailable. Please choose another one.', 'quick-instant-checkout' ) ) );
 		}
 
