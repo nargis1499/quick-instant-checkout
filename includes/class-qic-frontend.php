@@ -21,7 +21,7 @@ class QIC_Frontend {
 
 	private function __construct() {
 		add_shortcode( 'qic_checkout', array( $this, 'shortcode' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ), 999 );
 		add_action( 'woocommerce_single_product_summary', array( $this, 'maybe_render' ), 29 );
 		add_action( 'wp_footer', array( $this, 'render_portal_modal' ) );
 		add_filter( 'body_class', array( $this, 'body_class' ) );
@@ -78,8 +78,14 @@ class QIC_Frontend {
 				null
 			);
 		}
-		wp_enqueue_style( 'qic-style', QIC_URL . 'assets/css/qic.css', array(), QIC_VERSION );
-		wp_enqueue_style( 'qic-portal-style', QIC_URL . 'assets/css/qic-portal.css', array(), QIC_VERSION );
+		$deps = array();
+		foreach ( array( 'hello-elementor', 'hello-elementor-theme-style', 'elementor-frontend', 'elementor-global' ) as $handle ) {
+			if ( wp_style_is( $handle, 'registered' ) || wp_style_is( $handle, 'enqueued' ) ) {
+				$deps[] = $handle;
+			}
+		}
+		wp_enqueue_style( 'qic-style', QIC_URL . 'assets/css/qic.css', $deps, QIC_VERSION );
+		wp_enqueue_style( 'qic-portal-style', QIC_URL . 'assets/css/qic-portal.css', $deps, QIC_VERSION );
 		wp_enqueue_script( 'qic-script', QIC_URL . 'assets/js/qic.js', array(), QIC_VERSION, true );
 		wp_enqueue_script( 'qic-portal-script', QIC_URL . 'assets/js/qic-portal.js', array(), QIC_VERSION, true );
 		wp_localize_script(
