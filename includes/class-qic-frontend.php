@@ -23,6 +23,7 @@ class QIC_Frontend {
 		add_shortcode( 'qic_checkout', array( $this, 'shortcode' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_action( 'woocommerce_single_product_summary', array( $this, 'maybe_render' ), 29 );
+		add_action( 'wp_footer', array( $this, 'render_portal_modal' ) );
 		add_filter( 'body_class', array( $this, 'body_class' ) );
 		add_filter( 'wp_resource_hints', array( $this, 'font_preconnect' ), 10, 2 );
 	}
@@ -43,11 +44,21 @@ class QIC_Frontend {
 	}
 
 	/**
-	 * Enqueue on single product pages where the widget is active.
+	 * Enqueue assets on frontend pages so quick checkout can be triggered from any page.
 	 */
 	public function enqueue() {
-		if ( is_product() && QIC_Tiers::is_enabled( wc_get_product( get_the_ID() ) ) ) {
+		if ( ! is_admin() ) {
 			self::enqueue_assets();
+		}
+	}
+
+	/**
+	 * Render the portal modal in footer if not already rendered.
+	 */
+	public function render_portal_modal() {
+		if ( ! is_admin() && ! QIC_Portal::has_rendered() ) {
+			QIC_Portal::mark_rendered();
+			include QIC_PATH . 'templates/qic-portal.php';
 		}
 	}
 
@@ -75,14 +86,16 @@ class QIC_Frontend {
 			'qic-portal-script',
 			'qicPortalData',
 			array(
-				'nonceUrl'       => add_query_arg( 'wc-ajax', 'qic_nonce', home_url( '/' ) ),
-				'placeUrl'       => add_query_arg( 'wc-ajax', 'qic_place_order', home_url( '/' ) ),
-				'currencySymbol' => get_woocommerce_currency_symbol(),
-				'currencyCode'   => get_woocommerce_currency(),
-				'accountWord'    => __( 'account', 'quick-instant-checkout' ),
-				'cryptoPct'      => 10,
-				'qrTemplate'     => qic_qr_template(),
-				'i18n'           => array(
+				'nonceUrl'             => add_query_arg( 'wc-ajax', 'qic_nonce', home_url( '/' ) ),
+				'placeUrl'             => add_query_arg( 'wc-ajax', 'qic_place_order', home_url( '/' ) ),
+				'productUrl'           => add_query_arg( 'wc-ajax', 'qic_get_product', home_url( '/' ) ),
+				'showCategoryProducts' => $settings['show_category_products'] ?? 'yes',
+				'currencySymbol'       => get_woocommerce_currency_symbol(),
+				'currencyCode'         => get_woocommerce_currency(),
+				'accountWord'          => __( 'account', 'quick-instant-checkout' ),
+				'cryptoPct'            => 10,
+				'qrTemplate'           => qic_qr_template(),
+				'i18n'                 => array(
 					'invalidEmail'  => __( 'Please enter a valid email address.', 'quick-instant-checkout' ),
 					'requiredName'  => __( 'Please enter your full name.', 'quick-instant-checkout' ),
 					'selectGateway' => __( 'Please select a payment method or crypto protocol.', 'quick-instant-checkout' ),

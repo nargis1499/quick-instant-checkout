@@ -15,8 +15,8 @@ $qic_symbol          = get_woocommerce_currency_symbol();
 $qic_code            = get_woocommerce_currency();
 $qic_countries       = ( WC()->countries ) ? WC()->countries->get_countries() : array();
 
-if ( ! $qic_catalog ) {
-	return;
+if ( ! is_array( $qic_catalog ) ) {
+	$qic_catalog = array();
 }
 if ( ! $qic_countries ) {
 	$qic_countries = array(
