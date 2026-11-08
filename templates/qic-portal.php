@@ -109,6 +109,26 @@ if ( ! $qic_countries ) {
 					</div>
 				<?php endforeach; ?>
 
+				<!-- Custom Quantity Stepper -->
+				<div class="qic-custom-qty-box">
+					<div class="qic-cq-info">
+						<span class="qic-cq-label">
+							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8m-4-4h8"/></svg>
+							<?php esc_html_e( 'Custom Quantity', 'quick-instant-checkout' ); ?>
+						</span>
+						<small class="qic-cq-desc"><?php esc_html_e( 'Or fine-tune exact account amount (+ / -)', 'quick-instant-checkout' ); ?></small>
+					</div>
+					<div class="qic-cq-control">
+						<button type="button" class="qic-cq-btn qic-cq-minus" aria-label="<?php esc_attr_e( 'Decrease quantity', 'quick-instant-checkout' ); ?>">
+							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+						</button>
+						<input type="number" class="qic-cq-input" min="1" step="1" value="1" aria-label="<?php esc_attr_e( 'Exact quantity', 'quick-instant-checkout' ); ?>" />
+						<button type="button" class="qic-cq-btn qic-cq-plus" aria-label="<?php esc_attr_e( 'Increase quantity', 'quick-instant-checkout' ); ?>">
+							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+						</button>
+					</div>
+				</div>
+
 				<div class="qic-portal-summary">
 					<div class="qic-ps-left">
 						<span><?php esc_html_e( 'Selected Package:', 'quick-instant-checkout' ); ?></span>
