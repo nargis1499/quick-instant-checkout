@@ -114,10 +114,10 @@
 			pkg.textContent = state.catName + ' (' + accText + ')' + (state.isCustom ? ' [Custom]' : '');
 		}
 		if (unit) { unit.textContent = 'Estimated Unit Cost: ' + money(state.per) + '/' + qicPortalData.accountWord; }
-		if (total) { total.textContent = money(currentTotal()) + ' ' + qicPortalData.currencyCode; }
-		if (payTotal) { payTotal.textContent = money(currentTotal()) + ' ' + qicPortalData.currencyCode; }
+		if (total) { total.textContent = money(currentTotal()) + '\u00A0' + qicPortalData.currencyCode; }
+		if (payTotal) { payTotal.textContent = money(currentTotal()) + '\u00A0' + qicPortalData.currencyCode; }
 		var depAmount = $('.qic-dep-amount-val', portal());
-		if (depAmount && state.protocol) { depAmount.textContent = money(currentTotal()) + ' ' + qicPortalData.currencyCode + ' equivalent'; }
+		if (depAmount && state.protocol) { depAmount.textContent = money(currentTotal()) + '\u00A0' + qicPortalData.currencyCode + ' equivalent'; }
 	}
 
 	/* ---------- step 3: protocol / gateway ---------- */
@@ -225,7 +225,7 @@
 			? state.protocol.name + ' (' + state.protocol.code + ')'
 			: gatewayTitle());
 		set('.qic-rv-email', val('qic-f-email'));
-		set('.qic-rv-total', money(total) + ' ' + qicPortalData.currencyCode);
+		set('.qic-rv-total', money(total) + '\u00A0' + qicPortalData.currencyCode);
 
 		var place = $('.qic-place-order', portal());
 		if (place) {

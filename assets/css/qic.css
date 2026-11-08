@@ -231,6 +231,7 @@ body .qic-widget svg,
 	color: var(--qic-accent) !important;
 	font-size: 22px;
 	font-weight: 800;
+	white-space: nowrap !important;
 }
 
 /* CTA */

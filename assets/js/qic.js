@@ -33,7 +33,7 @@
 
 		var total = widget.querySelector('.qic-summary-total');
 		if (total) {
-			total.textContent = qicData.currencySymbol + fmt(price) + ' ' + qicData.currencyCode;
+			total.textContent = qicData.currencySymbol + fmt(price) + '\u00A0' + qicData.currencyCode;
 		}
 
 		widget.querySelectorAll('.qic-cta').forEach(function (cta) {
