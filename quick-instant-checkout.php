@@ -2,9 +2,10 @@
 /**
  * Plugin Name:       Quick Instant Checkout
  * Plugin URI:        https://example.com/quick-instant-checkout
- * Description:       Tiered "Quick Instant Checkout" package selector with one-click jump to payment for WooCommerce. Blueprint clone of a package-quantity instant checkout widget.
+ * Description:       Tiered "Quick Instant Checkout" package selector with one-click jump to payment for WooCommerce. Blueprint clone of a package-quantity instant checkout widget. Plugin by Foysal Hasan.
  * Version:           0.6.0
- * Author:            You
+ * Author:            Foysal Hasan
+ * Author URI:        https://wa.me/8801521521499
  * License:           GPL-2.0-or-later
  * Text Domain:       quick-instant-checkout
  * Requires at least: 6.0
@@ -18,6 +19,26 @@ define( 'QIC_VERSION', '0.6.0' );
 define( 'QIC_FILE', __FILE__ );
 define( 'QIC_PATH', plugin_dir_path( __FILE__ ) );
 define( 'QIC_URL', plugin_dir_url( __FILE__ ) );
+define( 'QIC_AUTHOR', 'Foysal Hasan' );
+define( 'QIC_WHATSAPP', '+8801521521499' );
+define( 'QIC_WHATSAPP_URL', 'https://wa.me/8801521521499' );
+
+// Plugin row meta on the Plugins page.
+add_filter(
+	'plugin_row_meta',
+	function ( $links, $file ) {
+		if ( plugin_basename( QIC_FILE ) === $file ) {
+			$links[] = sprintf(
+				'<a href="%s" target="_blank" rel="noopener noreferrer" style="color:#25d366;font-weight:600;">%s</a>',
+				esc_url( QIC_WHATSAPP_URL ),
+				esc_html__( 'WhatsApp: +8801521521499', 'quick-instant-checkout' )
+			);
+		}
+		return $links;
+	},
+	10,
+	2
+);
 
 require_once QIC_PATH . 'includes/class-qic-tiers.php';
 require_once QIC_PATH . 'includes/class-qic-admin.php';
