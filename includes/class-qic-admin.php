@@ -288,7 +288,13 @@ class QIC_Admin {
 					<h1><?php esc_html_e( 'Quick Instant Checkout Settings', 'quick-instant-checkout' ); ?></h1>
 					<p><?php esc_html_e( 'Tiered widget · order portal · manual crypto verification · theming', 'quick-instant-checkout' ); ?></p>
 				</div>
-				<span class="qic-set-ver">v<?php echo esc_html( QIC_VERSION ); ?></span>
+				<div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+					<a href="https://wa.me/8801521521499" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;background:rgba(37,211,102,0.18);border:1px solid rgba(37,211,102,0.4);color:#4ade80;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700;text-decoration:none;">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.188 8.188 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24M8.53 7.33c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02s.87 2.34.99 2.5c.12.16 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.47-.29s-1.44-.71-1.66-.79c-.22-.08-.38-.12-.54.12-.16.24-.62.79-.76.95-.14.16-.28.18-.53.06-.25-.12-1.06-.39-2.02-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.38.11-.5.11-.11.25-.29.38-.44.13-.15.17-.25.26-.42.09-.17.04-.31-.02-.44-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.41-.55-.42-.14-.01-.31-.01-.47-.01"/></svg>
+						<span>WhatsApp: +8801521521499</span>
+					</a>
+					<span class="qic-set-ver">v<?php echo esc_html( QIC_VERSION ); ?></span>
+				</div>
 			</div>
 			<form method="post" action="">
 				<?php wp_nonce_field( 'qic_save_settings', 'qic_nonce' ); ?>
@@ -459,6 +465,18 @@ class QIC_Admin {
 
 				<?php submit_button(); ?>
 			</form>
+
+			<div class="qic-set-footer" style="display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding:12px 18px;background:#fff;border:1px solid #e3e8f0;border-radius:10px;font-size:13px;color:#64748b;">
+				<div>
+					<strong><?php esc_html_e( 'Plugin by Foysal Hasan', 'quick-instant-checkout' ); ?></strong>
+				</div>
+				<div>
+					<a href="https://wa.me/8801521521499" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;color:#16a34a;font-weight:700;text-decoration:none;">
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.188 8.188 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24M8.53 7.33c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02s.87 2.34.99 2.5c.12.16 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.47-.29s-1.44-.71-1.66-.79c-.22-.08-.38-.12-.54.12-.16.24-.62.79-.76.95-.14.16-.28.18-.53.06-.25-.12-1.06-.39-2.02-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.38.11-.5.11-.11.25-.29.38-.44.13-.15.17-.25.26-.42.09-.17.04-.31-.02-.44-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.41-.55-.42-.14-.01-.31-.01-.47-.01"/></svg>
+						<span>WhatsApp: +8801521521499</span>
+					</a>
+				</div>
+			</div>
 		</div>
 		</div>
 		<?php
