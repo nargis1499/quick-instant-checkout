@@ -8,7 +8,7 @@
 	var state = {
 		cat: 0, tier: 0, price: 0, per: 0, accounts: 0, catName: '',
 		protocol: null, gateway: null, file: null, nonce: '', maxStep: 1,
-		finished: false
+		finished: false, isCustom: false, customQty: 0
 	};
 
 	function $(sel, root) { return (root || document).querySelector(sel); }
@@ -53,6 +53,42 @@
 		state.price = parseFloat(tile.getAttribute('data-price'));
 		state.per = parseFloat(tile.getAttribute('data-per'));
 		state.accounts = parseInt(tile.getAttribute('data-accounts'), 10);
+		state.isCustom = false;
+		state.customQty = state.accounts;
+
+		var cqInput = $('.qic-cq-input', portal());
+		if (cqInput) {
+			cqInput.value = state.accounts > 0 ? state.accounts : 1;
+		}
+		var cqBox = $('.qic-custom-qty-box', portal());
+		if (cqBox) {
+			cqBox.classList.remove('is-custom-active');
+		}
+
+		updateTotals();
+	}
+
+	function setCustomQty(qty) {
+		qty = Math.max(1, parseInt(qty, 10) || 1);
+		state.isCustom = true;
+		state.customQty = qty;
+		state.accounts = qty;
+
+		// Unselect all tier tiles when custom quantity is used
+		$$('.qic-tile', portal()).forEach(function (t) { t.classList.remove('is-selected'); });
+
+		var rate = state.per > 0 ? state.per : (state.price > 0 ? state.price : 0);
+		state.price = Math.round(qty * rate * 100) / 100;
+
+		var cqInput = $('.qic-cq-input', portal());
+		if (cqInput && parseInt(cqInput.value, 10) !== qty) {
+			cqInput.value = qty;
+		}
+		var cqBox = $('.qic-custom-qty-box', portal());
+		if (cqBox) {
+			cqBox.classList.add('is-custom-active');
+		}
+
 		updateTotals();
 	}
 
@@ -61,7 +97,10 @@
 		var unit = $('.qic-ps-unit', portal());
 		var total = $('.qic-ps-total', portal());
 		var payTotal = $('.qic-pay-total-val', portal());
-		if (pkg) { pkg.textContent = state.catName + ' (' + state.accounts + ' Accounts)'; }
+		if (pkg) {
+			var accText = state.accounts + ' ' + (state.accounts === 1 ? qicPortalData.accountWord : qicPortalData.accountWord + 's');
+			pkg.textContent = state.catName + ' (' + accText + ')' + (state.isCustom ? ' [Custom]' : '');
+		}
 		if (unit) { unit.textContent = 'Estimated Unit Cost: ' + money(state.per) + '/' + qicPortalData.accountWord; }
 		if (total) { total.textContent = money(currentTotal()) + ' ' + qicPortalData.currencyCode; }
 		if (payTotal) { payTotal.textContent = money(currentTotal()) + ' ' + qicPortalData.currencyCode; }
@@ -169,7 +208,7 @@
 
 		var total = state.price;
 
-		set('.qic-rv-package', state.accounts + 'x ' + state.catName);
+		set('.qic-rv-package', state.accounts + 'x ' + state.catName + (state.isCustom ? ' (Custom)' : ''));
 		set('.qic-rv-gateway', isCrypto
 			? state.protocol.name + ' (' + state.protocol.code + ')'
 			: gatewayTitle());
@@ -247,6 +286,10 @@
 		}
 		state.protocol = null;
 		state.gateway = null;
+		state.isCustom = false;
+		state.customQty = 0;
+		var cqBox = $('.qic-custom-qty-box', p);
+		if (cqBox) { cqBox.classList.remove('is-custom-active'); }
 		$$('.qic-proto', p).forEach(function (x) { x.classList.remove('is-selected'); });
 		var dep = $('.qic-deposit', p);
 		if (dep) { dep.hidden = true; }
@@ -300,6 +343,9 @@
 			var body = new FormData();
 			body.append('token', state.nonce);
 			body.append('variation_id', state.tier);
+			body.append('is_custom', state.isCustom ? '1' : '0');
+			body.append('custom_qty', state.accounts);
+			body.append('custom_price', state.price);
 			body.append('full_name', val('qic-f-name'));
 			body.append('email', val('qic-f-email'));
 			body.append('telegram', val('qic-f-telegram'));
@@ -412,6 +458,18 @@
 
 		if (e.target.closest('.qic-place-order')) { placeOrder(); return; }
 
+		if (e.target.closest('.qic-cq-plus')) {
+			var curPlus = state.isCustom ? state.customQty : (state.accounts || 1);
+			setCustomQty(curPlus + 1);
+			return;
+		}
+
+		if (e.target.closest('.qic-cq-minus')) {
+			var curMinus = state.isCustom ? state.customQty : (state.accounts || 1);
+			setCustomQty(Math.max(1, curMinus - 1));
+			return;
+		}
+
 		var gw = e.target.closest('.qic-gw');
 		if (gw && p.contains(gw)) {
 			$$('.qic-gw', p).forEach(function (g) { g.classList.remove('is-selected'); });
@@ -423,7 +481,21 @@
 		}
 	});
 
+	document.addEventListener('input', function (e) {
+		if (e.target.classList.contains('qic-cq-input')) {
+			var parsed = parseInt(e.target.value, 10);
+			if (!isNaN(parsed) && parsed >= 1) {
+				setCustomQty(parsed);
+			}
+		}
+	});
+
 	document.addEventListener('change', function (e) {
+		if (e.target.classList.contains('qic-cq-input')) {
+			var parsed = parseInt(e.target.value, 10);
+			setCustomQty(Math.max(1, isNaN(parsed) ? 1 : parsed));
+			return;
+		}
 		if (e.target.id === 'qic-f-proof') {
 			var f = e.target.files && e.target.files[0];
 			var err = checkFile(f);

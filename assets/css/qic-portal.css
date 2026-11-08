@@ -229,6 +229,113 @@
 	white-space: nowrap;
 }
 
+/* Custom quantity box */
+.qic-custom-qty-box {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	background: #fff;
+	border: 2px solid #e4e7ec;
+	border-radius: 12px;
+	padding: 13px 20px;
+	margin: 0 0 20px;
+	transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.qic-custom-qty-box.is-custom-active {
+	border-color: var(--qic-accent, #e8243f);
+	background: color-mix(in srgb, var(--qic-accent, #e8243f) 4%, #fff);
+	box-shadow: 0 6px 18px color-mix(in srgb, var(--qic-accent, #e8243f) 12%, transparent);
+}
+.qic-cq-info {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+.qic-cq-label {
+	font-size: 14.5px;
+	font-weight: 800;
+	color: #101828;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.qic-cq-label svg {
+	color: var(--qic-accent, #e8243f);
+	flex: 0 0 auto;
+}
+.qic-cq-desc {
+	font-size: 12px;
+	color: #667085;
+}
+.qic-cq-control {
+	display: inline-flex;
+	align-items: center;
+	background: #f8f9fb;
+	border: 1.5px solid #d0d5dd;
+	border-radius: 10px;
+	padding: 3px;
+	gap: 4px;
+	flex-shrink: 0;
+}
+.qic-cq-btn {
+	width: 32px;
+	height: 32px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #d0d5dd;
+	background: #fff;
+	color: #344054;
+	border-radius: 7px;
+	cursor: pointer;
+	box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+	transition: background 0.12s, color 0.12s, border-color 0.12s, transform 0.05s;
+	padding: 0;
+}
+.qic-cq-btn:hover {
+	background: var(--qic-accent, #e8243f);
+	border-color: var(--qic-accent, #e8243f);
+	color: #fff;
+}
+.qic-cq-btn:active {
+	transform: scale(0.92);
+}
+.qic-cq-input {
+	width: 62px;
+	height: 32px;
+	border: 1px solid #d0d5dd;
+	border-radius: 7px;
+	background: #fff;
+	text-align: center;
+	font-size: 15px;
+	font-weight: 800;
+	color: #101828;
+	padding: 0 4px;
+	-moz-appearance: textfield;
+}
+.qic-cq-input::-webkit-outer-spin-button,
+.qic-cq-input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+.qic-cq-input:focus {
+	outline: none;
+	border-color: var(--qic-accent, #e8243f);
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--qic-accent, #e8243f) 20%, transparent);
+}
+@media (max-width: 600px) {
+	.qic-custom-qty-box {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 12px;
+	}
+	.qic-cq-control {
+		justify-content: center;
+	}
+}
+
 /* Summary strip */
 .qic-portal-summary {
 	display: flex;

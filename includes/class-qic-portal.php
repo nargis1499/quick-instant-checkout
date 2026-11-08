@@ -221,6 +221,9 @@ class QIC_Portal {
 
 		$settings      = qic_settings();
 		$variation_id  = isset( $_POST['variation_id'] ) ? absint( wp_unslash( $_POST['variation_id'] ) ) : 0;
+		$is_custom     = ! empty( $_POST['is_custom'] ) && '1' === $_POST['is_custom'];
+		$custom_qty    = isset( $_POST['custom_qty'] ) ? absint( wp_unslash( $_POST['custom_qty'] ) ) : 0;
+		$custom_price  = isset( $_POST['custom_price'] ) ? (float) sanitize_text_field( wp_unslash( $_POST['custom_price'] ) ) : 0.0;
 		$full_name     = sanitize_text_field( wp_unslash( $_POST['full_name'] ?? '' ) );
 		$email         = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
 		$telegram      = sanitize_text_field( wp_unslash( $_POST['telegram'] ?? '' ) );
@@ -317,6 +320,14 @@ class QIC_Portal {
 			if ( $accounts <= 0 && $package_product->is_type( 'simple' ) ) {
 				$accounts = 1;
 			}
+			if ( $is_custom && $custom_qty > 0 ) {
+				$accounts = $custom_qty;
+				if ( $custom_price > 0 ) {
+					$item->set_subtotal( $custom_price );
+					$item->set_total( $custom_price );
+				}
+				$item->add_meta_data( __( 'Custom Quantity', 'quick-instant-checkout' ), sprintf( __( '%d accounts (custom)', 'quick-instant-checkout' ), $custom_qty ) );
+			}
 			if ( $accounts > 0 ) {
 				$item->add_meta_data( __( 'Accounts in package', 'quick-instant-checkout' ), $accounts );
 			}
@@ -385,6 +396,7 @@ class QIC_Portal {
 					'attachment_id' => $attachment_id,
 					'telegram'      => $telegram,
 					'whatsapp'      => $whatsapp,
+					'custom_qty'    => $is_custom ? $custom_qty : 0,
 				),
 				'qic_crypto_manual'
 			);
@@ -422,6 +434,7 @@ class QIC_Portal {
 				'method_title'  => $gateway->get_title(),
 				'txid'          => '',
 				'attachment_id' => 0,
+				'custom_qty'    => $is_custom ? $custom_qty : 0,
 			),
 			$gateway->id
 		);
@@ -495,6 +508,9 @@ class QIC_Portal {
 			$data['email'],
 			$data['full_name']
 		);
+		if ( ! empty( $data['custom_qty'] ) ) {
+			$note .= ' | ' . sprintf( __( 'Custom Qty: %d', 'quick-instant-checkout' ), (int) $data['custom_qty'] );
+		}
 		if ( ! empty( $data['telegram'] ) ) {
 			$note .= ' | TG: ' . $data['telegram'];
 		}
