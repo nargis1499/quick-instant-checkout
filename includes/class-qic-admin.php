@@ -41,8 +41,34 @@ class QIC_Admin {
 			array(
 				'id'          => '_qic_enabled',
 				'label'       => __( 'Enable Quick Instant Checkout widget', 'quick-instant-checkout' ),
-				'description' => __( 'Replaces the default add-to-cart form with the tiered package selector (product must be a Variable product with one variation per package).', 'quick-instant-checkout' ),
+				'description' => __( 'Replaces the default add-to-cart form with the tiered package selector (for simple products or variable products with one variation per package).', 'quick-instant-checkout' ),
 				'value'       => $product ? $product->get_meta( '_qic_enabled' ) : 'no',
+			)
+		);
+		woocommerce_wp_text_input(
+			array(
+				'id'          => '_qic_accounts',
+				'label'       => __( 'Accounts in package (simple product)', 'quick-instant-checkout' ),
+				'description' => __( 'Number of accounts/items in this package (defaults to 1 for simple products). Variable products configure this per variation.', 'quick-instant-checkout' ),
+				'type'        => 'number',
+				'value'       => $product ? $product->get_meta( '_qic_accounts' ) : '',
+				'placeholder' => '1',
+			)
+		);
+		woocommerce_wp_text_input(
+			array(
+				'id'          => '_qic_badge',
+				'label'       => __( 'Badge (simple product)', 'quick-instant-checkout' ),
+				'description' => __( 'Optional badge shown on the package tier (e.g. Save 10%). Variable products configure this per variation.', 'quick-instant-checkout' ),
+				'value'       => $product ? $product->get_meta( '_qic_badge' ) : '',
+			)
+		);
+		woocommerce_wp_text_input(
+			array(
+				'id'          => '_qic_ribbon',
+				'label'       => __( 'Ribbon (simple product)', 'quick-instant-checkout' ),
+				'description' => __( 'Optional ribbon displayed across the top of the portal tile (e.g. POPULAR). Variable products configure this per variation.', 'quick-instant-checkout' ),
+				'value'       => $product ? $product->get_meta( '_qic_ribbon' ) : '',
 			)
 		);
 		woocommerce_wp_text_input(
@@ -92,6 +118,17 @@ class QIC_Admin {
 		$product->update_meta_data( '_qic_warranty', isset( $_POST['_qic_warranty'] ) ? sanitize_text_field( wp_unslash( $_POST['_qic_warranty'] ) ) : '' );
 		$product->update_meta_data( '_qic_tagline', isset( $_POST['_qic_tagline'] ) ? sanitize_text_field( wp_unslash( $_POST['_qic_tagline'] ) ) : '' );
 		$product->update_meta_data( '_qic_emoji', isset( $_POST['_qic_emoji'] ) ? sanitize_text_field( wp_unslash( $_POST['_qic_emoji'] ) ) : '' );
+		if ( isset( $_POST['_qic_accounts'] ) && '' !== trim( $_POST['_qic_accounts'] ) ) {
+			$product->update_meta_data( '_qic_accounts', max( 1, absint( wp_unslash( $_POST['_qic_accounts'] ) ) ) );
+		} else {
+			$product->delete_meta_data( '_qic_accounts' );
+		}
+		if ( isset( $_POST['_qic_badge'] ) ) {
+			$product->update_meta_data( '_qic_badge', sanitize_text_field( wp_unslash( $_POST['_qic_badge'] ) ) );
+		}
+		if ( isset( $_POST['_qic_ribbon'] ) ) {
+			$product->update_meta_data( '_qic_ribbon', sanitize_text_field( wp_unslash( $_POST['_qic_ribbon'] ) ) );
+		}
 	}
 
 	/**

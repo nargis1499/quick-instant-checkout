@@ -91,7 +91,7 @@ class QIC_Portal {
 		$cats = array();
 		foreach ( $ids as $id ) {
 			$product = wc_get_product( $id );
-			if ( ! $product || ! $product->is_type( 'variable' ) ) {
+			if ( ! $product || ! ( $product->is_type( 'variable' ) || $product->is_type( 'simple' ) ) ) {
 				continue;
 			}
 			$tiers = QIC_Tiers::get_tiers( $product );
@@ -213,9 +213,23 @@ class QIC_Portal {
 			wp_send_json_error( array( 'message' => __( 'Please provide a valid email address for delivery.', 'quick-instant-checkout' ) ) );
 		}
 
-		$variation = wc_get_product( $variation_id );
-		$parent    = ( $variation && $variation->is_type( 'variation' ) ) ? wc_get_product( $variation->get_parent_id() ) : null;
-		if ( ! $parent || ! QIC_Tiers::is_enabled( $parent ) || ! $variation->is_purchasable() || ! $variation->is_in_stock() ) {
+		$selected_product = wc_get_product( $variation_id );
+		if ( ! $selected_product ) {
+			wp_send_json_error( array( 'message' => __( 'The selected package is unavailable. Please choose another one.', 'quick-instant-checkout' ) ) );
+		}
+
+		if ( $selected_product->is_type( 'variation' ) ) {
+			$parent          = wc_get_product( $selected_product->get_parent_id() );
+			$package_product = $selected_product;
+		} elseif ( $selected_product->is_type( 'simple' ) ) {
+			$parent          = $selected_product;
+			$package_product = $selected_product;
+		} else {
+			$parent          = null;
+			$package_product = null;
+		}
+
+		if ( ! $parent || ! $package_product || ! QIC_Tiers::is_enabled( $parent ) || ! $package_product->is_purchasable() || ! $package_product->is_in_stock() ) {
 			wp_send_json_error( array( 'message' => __( 'The selected package is unavailable. Please choose another one.', 'quick-instant-checkout' ) ) );
 		}
 
@@ -269,12 +283,15 @@ class QIC_Portal {
 
 		// NB: WC_Order::add_product() returns the item OBJECT in some versions and
 		// the item ID (int) in others — handle both.
-		$added = $order->add_product( $variation, 1 );
+		$added = $order->add_product( $package_product, 1 );
 		$item  = ( $added instanceof WC_Order_Item ) ? $added : $order->get_item( (int) $added );
 
 		// Stamp package info onto the line item (admin + emails).
 		if ( $item ) {
-			$accounts = (int) $variation->get_meta( '_qic_accounts' );
+			$accounts = (int) $package_product->get_meta( '_qic_accounts' );
+			if ( $accounts <= 0 && $package_product->is_type( 'simple' ) ) {
+				$accounts = 1;
+			}
 			if ( $accounts > 0 ) {
 				$item->add_meta_data( __( 'Accounts in package', 'quick-instant-checkout' ), $accounts );
 			}

@@ -51,34 +51,41 @@ class QIC_Cart {
 			wp_send_json_error( array( 'message' => __( 'This product is not available for quick checkout.', 'quick-instant-checkout' ) ) );
 		}
 
-		$variation = $variation_id ? wc_get_product( $variation_id ) : null;
-		if ( ! $variation || ! $variation->is_type( 'variation' ) || (int) $variation->get_parent_id() !== (int) $product_id ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid package selection. Please refresh the page and try again.', 'quick-instant-checkout' ) ) );
-		}
-		if ( ! $variation->is_purchasable() || ! $variation->is_in_stock() ) {
-			wp_send_json_error( array( 'message' => __( 'This package is sold out. Please choose another one.', 'quick-instant-checkout' ) ) );
-		}
-
-		// Derive variation attributes server-side, mirroring WooCommerce's own
-		// validation loop (parent variation attributes -> variation values).
-		$attributes = array();
-		foreach ( $product->get_attributes() as $attribute ) {
-			if ( ! $attribute->get_variation() ) {
-				continue;
+		if ( $product->is_type( 'simple' ) ) {
+			if ( ! $product->is_purchasable() || ! $product->is_in_stock() ) {
+				wp_send_json_error( array( 'message' => __( 'This package is sold out. Please choose another one.', 'quick-instant-checkout' ) ) );
 			}
-			$key   = 'attribute_' . sanitize_title( $attribute->get_name() );
-			$value = $variation->get_attribute( $attribute->get_name() );
-			if ( '' === $value ) {
-				$value = (string) get_post_meta( $variation_id, $key, true );
+			$added = WC()->cart->add_to_cart( $product_id, 1 );
+		} else {
+			$variation = $variation_id ? wc_get_product( $variation_id ) : null;
+			if ( ! $variation || ! $variation->is_type( 'variation' ) || (int) $variation->get_parent_id() !== (int) $product_id ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid package selection. Please refresh the page and try again.', 'quick-instant-checkout' ) ) );
 			}
-			$attributes[ $key ] = $value;
-		}
+			if ( ! $variation->is_purchasable() || ! $variation->is_in_stock() ) {
+				wp_send_json_error( array( 'message' => __( 'This package is sold out. Please choose another one.', 'quick-instant-checkout' ) ) );
+			}
 
-		$added = WC()->cart->add_to_cart( $product_id, 1, $variation_id, $attributes );
-		if ( ! $added ) {
-			// Fallback: add the variation directly (its own line), which bypasses
-			// attribute re-validation entirely (covers odd importer storage).
-			$added = WC()->cart->add_to_cart( $variation_id, 1 );
+			// Derive variation attributes server-side, mirroring WooCommerce's own
+			// validation loop (parent variation attributes -> variation values).
+			$attributes = array();
+			foreach ( $product->get_attributes() as $attribute ) {
+				if ( ! $attribute->get_variation() ) {
+					continue;
+				}
+				$key   = 'attribute_' . sanitize_title( $attribute->get_name() );
+				$value = $variation->get_attribute( $attribute->get_name() );
+				if ( '' === $value ) {
+					$value = (string) get_post_meta( $variation_id, $key, true );
+				}
+				$attributes[ $key ] = $value;
+			}
+
+			$added = WC()->cart->add_to_cart( $product_id, 1, $variation_id, $attributes );
+			if ( ! $added ) {
+				// Fallback: add the variation directly (its own line), which bypasses
+				// attribute re-validation entirely (covers odd importer storage).
+				$added = WC()->cart->add_to_cart( $variation_id, 1 );
+			}
 		}
 		if ( ! $added ) {
 			ob_start();

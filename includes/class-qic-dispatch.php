@@ -98,17 +98,27 @@ class QIC_Dispatch {
 		$items = array();
 		foreach ( $order->get_items() as $item ) {
 			$product = $item->get_product();
-			if ( ! $product instanceof WC_Product_Variation ) {
+			if ( ! $product instanceof WC_Product ) {
 				continue;
 			}
-			$parent = wc_get_product( $product->get_parent_id() );
+			if ( $product instanceof WC_Product_Variation ) {
+				$parent = wc_get_product( $product->get_parent_id() );
+			} elseif ( $product->is_type( 'simple' ) ) {
+				$parent = $product;
+			} else {
+				continue;
+			}
 			if ( ! $parent || 'yes' !== $parent->get_meta( '_qic_enabled' ) ) {
 				continue;
+			}
+			$accounts = (int) $product->get_meta( '_qic_accounts' );
+			if ( $accounts <= 0 && $product->is_type( 'simple' ) ) {
+				$accounts = 1;
 			}
 			$items[] = array(
 				'sku'      => $product->get_sku(),
 				'label'    => $item->get_name(),
-				'accounts' => (int) $product->get_meta( '_qic_accounts' ),
+				'accounts' => $accounts,
 				'quantity' => $item->get_quantity(),
 			);
 		}
