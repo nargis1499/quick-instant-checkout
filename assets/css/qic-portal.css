@@ -612,12 +612,29 @@ body .qic-portal .qic-cq-input,
 	padding: 16px 22px;
 	margin-bottom: 8px;
 }
-.qic-ps-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.qic-ps-left {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+	flex: 1 1 auto;
+}
 .qic-ps-left > span, .qic-ps-right > span { color: #667085; font-size: 13px; }
-.qic-ps-package { color: #101828; font-size: 16.5px; font-weight: 800; }
+.qic-ps-package { color: #101828; font-size: 16.5px; font-weight: 800; word-break: break-word; }
 .qic-ps-unit { color: #98a2b3; font-size: 12.5px; }
-.qic-ps-right { text-align: right; }
-.qic-ps-total { display: block; color: var(--qic-accent, #e8243f); font-size: 26px; font-weight: 900; }
+.qic-ps-right {
+	text-align: right;
+	flex-shrink: 0 !important;
+	white-space: nowrap !important;
+}
+.qic-ps-total {
+	display: block;
+	color: var(--qic-accent, #e8243f);
+	font-size: 26px;
+	font-weight: 900;
+	white-space: nowrap !important;
+	line-height: 1.15 !important;
+}
 
 /* Actions */
 .qic-portal-actions {
@@ -766,7 +783,7 @@ body .qic-portal .qic-gw,
 .qic-review .qic-row strong { color: #101828; text-align: right; }
 .qic-review .qic-total { border-top: 1px solid #e4e7ec; margin-top: 8px; padding-top: 12px; }
 .qic-review .qic-total > span { color: #101828; font-weight: 800; }
-.qic-rv-total { color: var(--qic-accent, #e8243f) !important; font-size: 20px; font-weight: 900; }
+.qic-rv-total { color: var(--qic-accent, #e8243f) !important; font-size: 20px; font-weight: 900; white-space: nowrap !important; }
 .qic-rv-discount { color: #16a34a !important; }
 .qic-portal .qic-terms,
 body .qic-portal .qic-terms,
@@ -862,8 +879,8 @@ body.qic-portal-open { overflow: hidden; }
 	margin-bottom: 14px;
 }
 .qic-pay-head .qic-portal-label { margin-bottom: 0; }
-.qic-pay-total { color: #667085; font-weight: 700; font-size: 14px; }
-.qic-pay-total strong { color: var(--qic-accent, #e8243f); font-size: 16px; font-weight: 900; }
+.qic-pay-total { color: #667085; font-weight: 700; font-size: 14px; white-space: nowrap !important; flex-shrink: 0 !important; }
+.qic-pay-total strong { color: var(--qic-accent, #e8243f); font-size: 16px; font-weight: 900; white-space: nowrap !important; }
 .qic-proto-grid {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
