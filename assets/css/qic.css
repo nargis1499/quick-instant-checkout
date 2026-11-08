@@ -2,17 +2,20 @@
  * Quick Instant Checkout widget styles — visual clone of the reference design.
  */
 
-/* ============ Hello Elementor & Theme Reset Isolation ============ */
+/* ============ Universal Theme & Plugin Isolation Shield ============ */
 .qic-widget,
 .qic-widget *,
 .qic-widget *::before,
 .qic-widget *::after {
 	box-sizing: border-box !important;
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
 }
 
-/* Neutralize theme/Elementor button reset for any button inside widget */
+/* Neutralize any theme/plugin button reset inside widget */
 .qic-widget button,
 body .qic-widget button,
+.woocommerce .qic-widget button,
 .elementor .qic-widget button,
 .elementor-kit-X .qic-widget button {
 	all: unset;
@@ -21,19 +24,31 @@ body .qic-widget button,
 	cursor: pointer;
 }
 
-/* Neutralize theme/Elementor SVG distortion */
+/* Neutralize theme/plugin SVG scaling & fill corruption */
 .qic-widget svg,
 body .qic-widget svg,
 .elementor .qic-widget svg {
 	max-width: none !important;
+	max-height: none !important;
 	height: auto;
-	vertical-align: middle;
-	flex-shrink: 0;
+	vertical-align: middle !important;
+	flex-shrink: 0 !important;
 }
+.qic-widget svg[width="12"] { width: 12px !important; height: 14px !important; }
 .qic-widget svg[width="14"] { width: 14px !important; height: 14px !important; }
 .qic-widget svg[width="16"] { width: 16px !important; height: 16px !important; }
 .qic-widget svg[width="18"] { width: 18px !important; height: 18px !important; }
 .qic-widget svg[width="20"] { width: 20px !important; height: 20px !important; }
+
+/* Prevent themes from filling stroke SVGs with solid black */
+.qic-widget svg[fill="none"],
+.qic-widget svg[fill="none"] * {
+	fill: none !important;
+}
+.qic-widget svg[stroke="currentColor"],
+.qic-widget svg[stroke="currentColor"] * {
+	stroke: currentColor !important;
+}
 
 /* Neutralize theme heading and paragraph margins */
 .qic-widget h1,
@@ -43,9 +58,9 @@ body .qic-widget svg,
 .qic-widget h5,
 .qic-widget h6,
 .qic-widget p {
-	margin: 0;
-	padding: 0;
-	line-height: inherit;
+	margin: 0 !important;
+	padding: 0 !important;
+	line-height: inherit !important;
 }
 
 .qic-widget {

@@ -21,7 +21,7 @@ class QIC_Frontend {
 
 	private function __construct() {
 		add_shortcode( 'qic_checkout', array( $this, 'shortcode' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ), 999 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ), 99999 );
 		add_action( 'woocommerce_single_product_summary', array( $this, 'maybe_render' ), 29 );
 		add_action( 'wp_footer', array( $this, 'render_portal_modal' ) );
 		add_filter( 'body_class', array( $this, 'body_class' ) );
@@ -79,7 +79,7 @@ class QIC_Frontend {
 			);
 		}
 		$deps = array();
-		foreach ( array( 'hello-elementor', 'hello-elementor-theme-style', 'elementor-frontend', 'elementor-global' ) as $handle ) {
+		foreach ( array( 'hello-elementor', 'hello-elementor-theme-style', 'elementor-frontend', 'elementor-global', 'woocommerce-general', 'woocommerce-layout', 'woocommerce-smallscreen' ) as $handle ) {
 			if ( wp_style_is( $handle, 'registered' ) || wp_style_is( $handle, 'enqueued' ) ) {
 				$deps[] = $handle;
 			}
