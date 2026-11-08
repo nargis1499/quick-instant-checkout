@@ -91,7 +91,7 @@ class QIC_Frontend {
 					'fileBadType'   => __( 'Only PNG, JPG or GIF screenshots are allowed.', 'quick-instant-checkout' ),
 					'fileTooBig'    => __( 'The screenshot must be 5MB or smaller.', 'quick-instant-checkout' ),
 					'placeOrder'    => __( 'Place Order', 'quick-instant-checkout' ),
-					'submitOrder'   => __( 'Submit Order & Get Accounts', 'quick-instant-checkout' ),
+					'submitOrder'   => __( 'Submit Order', 'quick-instant-checkout' ),
 					'sentPayment'   => __( 'I Have Sent Payment', 'quick-instant-checkout' ),
 					'uploadHash'    => __( 'Upload Hash', 'quick-instant-checkout' ),
 					'continueVerify' => __( 'Continue to Verification', 'quick-instant-checkout' ),
