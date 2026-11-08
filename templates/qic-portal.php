@@ -72,7 +72,7 @@ if ( ! $qic_countries ) {
 				</div>
 
 				<div class="qic-tier-head">
-					<div class="qic-portal-label"><?php esc_html_e( 'Select Quantity Tier', 'quick-instant-checkout' ); ?> (<span class="qic-tier-cat-name"></span>)</div>
+					<div class="qic-portal-label"><?php esc_html_e( 'Select Quantity Tier', 'quick-instant-checkout' ); ?></div>
 				</div>
 
 				<?php foreach ( $qic_catalog as $cat ) : ?>
