@@ -833,17 +833,52 @@ body.qic-portal-open { overflow: hidden; }
 @media (max-width: 860px) {
 	.qic-tier-tiles { grid-template-columns: repeat(3, 1fr); }
 
-	/* Mobile to medium devices: header shows only "Order Portal" text (14px), hides logo and SSL pill */
+	/* Mobile to medium devices: icon on left, site name + "Order Portal" (12px), close on right; all side-by-side */
 	.qic-portal .qic-portal-head,
 	body .qic-portal .qic-portal-head,
+	.elementor .qic-portal .qic-portal-head,
 	.qic-portal-head {
-		padding: 11px 16px !important;
+		padding: 10px 14px !important;
 		gap: 8px !important;
+		display: flex !important;
+		flex-direction: row !important;
+		align-items: center !important;
+		flex-wrap: nowrap !important;
 	}
 	.qic-portal .qic-portal-logo,
 	body .qic-portal .qic-portal-logo,
 	.elementor .qic-portal .qic-portal-logo,
 	.qic-portal-logo {
+		display: inline-flex !important;
+		flex: 0 0 26px !important;
+		width: 26px !important;
+		height: 26px !important;
+		border-radius: 7px !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		align-items: center !important;
+		justify-content: center !important;
+	}
+	.qic-portal .qic-portal-logo svg,
+	body .qic-portal .qic-portal-logo svg,
+	.elementor .qic-portal .qic-portal-logo svg,
+	.qic-portal-logo svg {
+		width: 14px !important;
+		height: 14px !important;
+	}
+	.qic-portal .qic-portal-headtext,
+	body .qic-portal .qic-portal-headtext,
+	.elementor .qic-portal .qic-portal-headtext,
+	.qic-portal-headtext {
+		flex: 1 1 auto !important;
+		min-width: 0 !important;
+		display: block !important;
+		margin: 0 !important;
+	}
+	.qic-portal .qic-portal-headtext p,
+	body .qic-portal .qic-portal-headtext p,
+	.elementor .qic-portal .qic-portal-headtext p,
+	.qic-portal-headtext p {
 		display: none !important;
 	}
 	.qic-portal .qic-portal-ssl,
@@ -852,27 +887,39 @@ body.qic-portal-open { overflow: hidden; }
 	.qic-portal-ssl {
 		display: none !important;
 	}
-	.qic-portal .qic-portal-headtext p,
-	body .qic-portal .qic-portal-headtext p,
-	.elementor .qic-portal .qic-portal-headtext p,
-	.qic-portal-headtext p {
-		display: none !important;
-	}
 	.qic-portal .qic-portal-site-name,
 	body .qic-portal .qic-portal-site-name,
 	.elementor .qic-portal .qic-portal-site-name,
 	.qic-portal-site-name {
-		display: none !important;
+		display: inline !important;
+	}
+	.qic-portal .qic-portal-head-title,
+	body .qic-portal .qic-portal-head-title,
+	.elementor .qic-portal .qic-portal-head-title,
+	.qic-portal-head-title {
+		display: inline !important;
 	}
 	.qic-portal .qic-portal-headtext h4,
 	body .qic-portal .qic-portal-headtext h4,
 	.elementor .qic-portal .qic-portal-headtext h4,
 	.qic-portal-headtext h4 {
-		font-size: 14px !important;
+		font-size: 12px !important;
+		font-weight: 700 !important;
 		line-height: 1.2 !important;
 		white-space: nowrap !important;
 		overflow: hidden !important;
 		text-overflow: ellipsis !important;
+		margin: 0 !important;
+	}
+	.qic-portal .qic-portal-close,
+	body .qic-portal .qic-portal-close,
+	.elementor .qic-portal .qic-portal-close,
+	.qic-portal-close {
+		flex: 0 0 28px !important;
+		width: 28px !important;
+		height: 28px !important;
+		font-size: 18px !important;
+		margin-left: auto !important;
 	}
 }
 @media (max-width: 640px) {
@@ -1265,13 +1312,16 @@ body .qic-portal .qic-success .qic-btn-primary,
 /* ============ v0.5 responsive hardening (portal) ============ */
 @media (max-width: 480px) {
 	.qic-portal { padding: 6px; }
-	.qic-portal-head { padding: 10px 14px !important; gap: 8px !important; }
-	.qic-portal-logo { display: none !important; }
+	.qic-portal-head { padding: 9px 12px !important; gap: 8px !important; display: flex !important; flex-direction: row !important; align-items: center !important; flex-wrap: nowrap !important; }
+	.qic-portal-logo { display: inline-flex !important; flex: 0 0 24px !important; width: 24px !important; height: 24px !important; border-radius: 6px !important; margin: 0 !important; padding: 0 !important; align-items: center !important; justify-content: center !important; }
+	.qic-portal-logo svg { width: 13px !important; height: 13px !important; }
 	.qic-portal-ssl { display: none !important; }
+	.qic-portal-headtext { flex: 1 1 auto !important; min-width: 0 !important; display: block !important; margin: 0 !important; }
 	.qic-portal-headtext p { display: none !important; }
-	.qic-portal-site-name { display: none !important; }
-	.qic-portal-headtext h4 { font-size: 14px !important; line-height: 1.2 !important; }
-	.qic-portal-close { flex-basis: 28px !important; width: 28px !important; height: 28px !important; font-size: 17px !important; }
+	.qic-portal-site-name { display: inline !important; }
+	.qic-portal-head-title { display: inline !important; }
+	.qic-portal-headtext h4 { font-size: 12px !important; font-weight: 700 !important; line-height: 1.2 !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; margin: 0 !important; }
+	.qic-portal-close { flex: 0 0 26px !important; width: 26px !important; height: 26px !important; font-size: 17px !important; margin-left: auto !important; }
 	.qic-portal-steps { gap: 6px 12px; padding: 8px 6px; }
 	.qic-step { gap: 5px; font-size: 11px; }
 	.qic-step-dot { width: 20px; height: 20px; font-size: 10.5px; }
