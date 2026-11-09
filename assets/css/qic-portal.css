@@ -832,6 +832,48 @@ body.qic-portal-open { overflow: hidden; }
 /* Responsive */
 @media (max-width: 860px) {
 	.qic-tier-tiles { grid-template-columns: repeat(3, 1fr); }
+
+	/* Mobile to medium devices: header shows only "Order Portal" text (14px), hides logo and SSL pill */
+	.qic-portal .qic-portal-head,
+	body .qic-portal .qic-portal-head,
+	.qic-portal-head {
+		padding: 11px 16px !important;
+		gap: 8px !important;
+	}
+	.qic-portal .qic-portal-logo,
+	body .qic-portal .qic-portal-logo,
+	.elementor .qic-portal .qic-portal-logo,
+	.qic-portal-logo {
+		display: none !important;
+	}
+	.qic-portal .qic-portal-ssl,
+	body .qic-portal .qic-portal-ssl,
+	.elementor .qic-portal .qic-portal-ssl,
+	.qic-portal-ssl {
+		display: none !important;
+	}
+	.qic-portal .qic-portal-headtext p,
+	body .qic-portal .qic-portal-headtext p,
+	.elementor .qic-portal .qic-portal-headtext p,
+	.qic-portal-headtext p {
+		display: none !important;
+	}
+	.qic-portal .qic-portal-site-name,
+	body .qic-portal .qic-portal-site-name,
+	.elementor .qic-portal .qic-portal-site-name,
+	.qic-portal-site-name {
+		display: none !important;
+	}
+	.qic-portal .qic-portal-headtext h4,
+	body .qic-portal .qic-portal-headtext h4,
+	.elementor .qic-portal .qic-portal-headtext h4,
+	.qic-portal-headtext h4 {
+		font-size: 14px !important;
+		line-height: 1.2 !important;
+		white-space: nowrap !important;
+		overflow: hidden !important;
+		text-overflow: ellipsis !important;
+	}
 }
 @media (max-width: 640px) {
 	.qic-portal { padding: 10px; }
@@ -1223,12 +1265,13 @@ body .qic-portal .qic-success .qic-btn-primary,
 /* ============ v0.5 responsive hardening (portal) ============ */
 @media (max-width: 480px) {
 	.qic-portal { padding: 6px; }
-	.qic-portal-head { padding: 11px 14px; gap: 8px; }
-	.qic-portal-logo { flex-basis: 32px; width: 32px; height: 32px; border-radius: 8px; }
-	.qic-portal-headtext h4 { font-size: 14.5px; }
-	.qic-portal-headtext p { font-size: 10.5px; }
-	.qic-portal-ssl { font-size: 10px; padding: 4px 8px; }
-	.qic-portal-close { flex-basis: 28px; width: 28px; height: 28px; font-size: 17px; }
+	.qic-portal-head { padding: 10px 14px !important; gap: 8px !important; }
+	.qic-portal-logo { display: none !important; }
+	.qic-portal-ssl { display: none !important; }
+	.qic-portal-headtext p { display: none !important; }
+	.qic-portal-site-name { display: none !important; }
+	.qic-portal-headtext h4 { font-size: 14px !important; line-height: 1.2 !important; }
+	.qic-portal-close { flex-basis: 28px !important; width: 28px !important; height: 28px !important; font-size: 17px !important; }
 	.qic-portal-steps { gap: 6px 12px; padding: 8px 6px; }
 	.qic-step { gap: 5px; font-size: 11px; }
 	.qic-step-dot { width: 20px; height: 20px; font-size: 10.5px; }

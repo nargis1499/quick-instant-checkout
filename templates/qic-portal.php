@@ -35,7 +35,7 @@ if ( ! $qic_countries ) {
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 8h14l-1.2 12H6.2L5 8Z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="#fff" stroke-width="2"/></svg>
 			</div>
 			<div class="qic-portal-headtext">
-				<h4><?php echo esc_html( get_bloginfo( 'name' ) ); ?> <?php esc_html_e( 'Order Portal', 'quick-instant-checkout' ); ?></h4>
+				<h4><span class="qic-portal-site-name"><?php echo esc_html( get_bloginfo( 'name' ) ); ?> </span><span class="qic-portal-head-title"><?php esc_html_e( 'Order Portal', 'quick-instant-checkout' ); ?></span></h4>
 				<p><?php echo esc_html( $qic_settings_portal['portal_subtitle'] ); ?></p>
 			</div>
 			<span class="qic-portal-ssl">
